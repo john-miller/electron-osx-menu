@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -14,15 +14,16 @@ function createWindow () {
     transparent: true,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: '',
     }
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -30,7 +31,7 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  })
+  });
 }
 
 // This method will be called when Electron has finished
@@ -46,6 +47,25 @@ app.on('window-all-closed', function () {
     app.quit()
   }
 })
+
+// Listen for launch-window events
+ipcMain.on('launch-window', (event, arg) => {
+
+  // Create a new browser window object
+  var anotherWindow = new BrowserWindow({
+    width: 600,
+    height: 600,
+    frame: true,
+    transparent: true,
+    resizable: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  // Load a url passed in from the arguments
+  anotherWindow.loadURL(arg);
+});
 
 app.on('activate', function () {
   // On macOS it's common to re-create a window in the app when the
