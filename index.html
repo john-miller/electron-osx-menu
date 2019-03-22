@@ -130,7 +130,7 @@
     <!-- OSX Menu -->
     <footer>
         <ul>
-            <li data-title="Finder"><img data-title="Finder" src="https://harnerdesigns.com/wp-content/uploads/2018/05/finder.png"></li>
+            <li onclick="launchWindow('http://google.com')" data-title="Finder"><img data-title="Finder" src="https://harnerdesigns.com/wp-content/uploads/2018/05/finder.png"></li>
             <li data-title="Chrome"><img src="https://harnerdesigns.com/wp-content/uploads/2018/05/Google_Chrome_icon_2011.png"></li>
             <li data-title="iTunes" class="closed" id="iTunes"><img src="https://harnerdesigns.com/wp-content/uploads/2018/05/iTunes-logo.svg"></li>
             <li data-title="Photoshop"><img src="https://harnerdesigns.com/wp-content/uploads/2018/05/Adobe_Photoshop_CS6_icon.png"></li>
@@ -144,8 +144,13 @@
 
 
     <script>
-      // You can also require other files to run in this process
       require('./renderer.js')
+
+      const { ipcRenderer  } = require('electron');
+      var launchWindow = function(url) {
+        ipcRenderer.send('launch-window', url);
+      }
+
     </script>
   </body>
 </html>
